@@ -13,25 +13,29 @@ const winLines = [
   [2, 4, 6],
 ];
 
+let timer = null;
+
 const App = () => {
   const [history, setHistory] = useState([{ squares: Array(9).fill(null) }]);
   const [stepNumber, setStepNumber] = useState(0);
   const [xIsNext, setXIsNext] = useState(true);
-  const [seconds, setSeconds] = useState(10);
-  const [isTimeRunning, setIsTimeRunning] = useState(false);
+  const [seconds, setSeconds] = useState(null);
 
   useEffect(() => {
-    if (seconds > 0 && !isTimeRunning) {
-      setIsTimeRunning()
-    // console.log("useEffect", seconds)
-      setTimeout(() => {
-        console.log("setTimeout", seconds)
-        setSeconds(seconds - 1)
+    if (seconds > 0) {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        setSeconds(seconds - 1);
       }, 1000);
     }
   }, [seconds]);
 
-
+  const startTheGame = () => {
+    setSeconds(10);
+    setHistory([{ squares: Array(9).fill(null) }]);
+    setStepNumber(0);
+    setXIsNext(true);
+  };
 
   const jumpToStep = (step) => {
     setStepNumber(step);
@@ -48,6 +52,8 @@ const App = () => {
         squares[a] === squares[c]
       ) {
         return squares[a];
+      } else if (seconds === 0) {
+        return `${xIsNext ? 'O' : 'X'}`;
       }
     }
     return null;
@@ -69,7 +75,7 @@ const App = () => {
 
   const current = history[stepNumber];
   const winnerLabel = getWinnerLabel(current.squares);
-  const status = winnerLabel
+  let status = winnerLabel
     ? `Player ${winnerLabel} win the game`
     : `Next player ${xIsNext ? 'X' : 'O'}`;
 
@@ -78,18 +84,21 @@ const App = () => {
       <div className="game-board">
         <Board squares={current.squares} onClick={(i) => handleBoardClick(i)} />
         <div>{seconds}</div>
+        <button onClick={() => startTheGame()}>Start new game</button>
       </div>
 
       <div className="game-info">
         <div>{status}</div>
-        <ol>{history.map((step, move) => {
+        <ol>
+          {history.map((step, move) => {
             return (
-                <li key={move}>
-                  <button onClick={() => jumpToStep(move)}>Go to step #{move}</button>
-                </li>
+              <li key={move}>
+                <button onClick={() => jumpToStep(move)}>
+                  Go to step #{move}
+                </button>
+              </li>
             );
-          })
-        }
+          })}
         </ol>
       </div>
     </div>

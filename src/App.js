@@ -80,20 +80,21 @@ const App = () => {
     : `Next player ${xIsNext ? 'X' : 'O'}`;
 
   return (
+    <div>
+    <h1 className='heading'>Tic-Tac-Toe</h1>
+    <h2 className='status'>{status}</h2>
     <div className="game">
       <div className="game-board">
         <Board squares={current.squares} onClick={(i) => handleBoardClick(i)} />
-        <div>{seconds}</div>
-        <button onClick={() => startTheGame()}>Start new game</button>
+        <button className='button' onClick={() => startTheGame()}>Start new game</button>
+        <div className='timer'>{seconds}</div>
       </div>
-
       <div className="game-info">
-        <div>{status}</div>
         <ol>
           {history.map((step, move) => {
             return (
               <li key={move}>
-                <button onClick={() => jumpToStep(move)}>
+                <button className='button' onClick={() => jumpToStep(move)}>
                   Go to step #{move}
                 </button>
               </li>
@@ -101,6 +102,7 @@ const App = () => {
           })}
         </ol>
       </div>
+    </div>
     </div>
   );
 };

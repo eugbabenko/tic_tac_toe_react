@@ -1,0 +1,15 @@
+body {
+    font: 14px "Century Gothic", Futura, sans-serif;
+    margin: 20px;
+    background-image: linear-gradient(to bottom right,#B13E77,#2DCEA3);
+  }
+  
+ol, ul {
+    padding-left: 30px;
+    list-style-type: none;
+}
+
+#root {
+  height: 95vh;
+}
+  

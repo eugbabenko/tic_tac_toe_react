@@ -14,6 +14,7 @@ const winLines = [
 ];
 
 let timer = null;
+let win = false;
 
 const App = () => {
   const [history, setHistory] = useState([{ squares: Array(9).fill(null) }]);
@@ -22,7 +23,7 @@ const App = () => {
   const [seconds, setSeconds] = useState(null);
 
   useEffect(() => {
-    if (seconds > 0) {
+    if (seconds > 0 && !win) {
       clearTimeout(timer);
       timer = setTimeout(() => {
         setSeconds(seconds - 1);
@@ -30,7 +31,9 @@ const App = () => {
     }
   }, [seconds]);
 
+
   const startTheGame = () => {
+    win = false;
     setSeconds(10);
     setHistory([{ squares: Array(9).fill(null) }]);
     setStepNumber(0);
@@ -75,9 +78,22 @@ const App = () => {
 
   const current = history[stepNumber];
   const winnerLabel = getWinnerLabel(current.squares);
-  let status = winnerLabel
-    ? `Player ${winnerLabel} win the game`
-    : `Next player ${xIsNext ? 'X' : 'O'}`;
+  
+
+  const getStatus = (winnerLabel) => {
+    const allSquaresFill = current.squares.every(square => square !== null);
+    if (winnerLabel) {
+      win = true;
+      return `Player ${winnerLabel} win the game`
+    } else if (allSquaresFill) {
+      win = true;
+      return 'Draw'
+    } else {
+      return `Next player ${xIsNext ? 'X' : 'O'}`;
+    }
+  } 
+
+  let status = getStatus(winnerLabel)
 
   return (
     <div>
